@@ -1,4 +1,4 @@
-package atomic
+package atom
 
 import (
 	"encoding/json"

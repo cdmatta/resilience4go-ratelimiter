@@ -1,4 +1,4 @@
-package atomic
+package atom
 
 import (
 	"bytes"
@@ -85,7 +85,7 @@ func TestNocmpCopy(t *testing.T) {
 	})
 }
 
-const _badFile = `package atomic
+const _badFile = `package atom
 
 import "fmt"
 

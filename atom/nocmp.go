@@ -1,4 +1,4 @@
-package atomic
+package atom
 
 // nocmp is an uncomparable struct. Embed this inside another struct to make
 // it uncomparable.
