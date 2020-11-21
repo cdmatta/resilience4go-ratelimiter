@@ -9,23 +9,23 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUint32(t *testing.T) {
-	atom := NewUint32(42)
+func TestInt32(t *testing.T) {
+	atom := NewInt32(42)
 
-	require.Equal(t, uint32(42), atom.Load(), "Load didn't work.")
-	require.Equal(t, uint32(46), atom.Add(4), "Add didn't work.")
-	require.Equal(t, uint32(44), atom.Sub(2), "Sub didn't work.")
-	require.Equal(t, uint32(45), atom.Inc(), "Inc didn't work.")
-	require.Equal(t, uint32(44), atom.Dec(), "Dec didn't work.")
+	require.Equal(t, int32(42), atom.Load(), "Load didn't work.")
+	require.Equal(t, int32(46), atom.Add(4), "Add didn't work.")
+	require.Equal(t, int32(44), atom.Sub(2), "Sub didn't work.")
+	require.Equal(t, int32(45), atom.Inc(), "Inc didn't work.")
+	require.Equal(t, int32(44), atom.Dec(), "Dec didn't work.")
 
 	require.True(t, atom.CAS(44, 0), "CAS didn't report a swap.")
-	require.Equal(t, uint32(0), atom.Load(), "CAS didn't set the correct value.")
+	require.Equal(t, int32(0), atom.Load(), "CAS didn't set the correct value.")
 
-	require.Equal(t, uint32(0), atom.Swap(1), "Swap didn't return the old value.")
-	require.Equal(t, uint32(1), atom.Load(), "Swap didn't set the correct value.")
+	require.Equal(t, int32(0), atom.Swap(1), "Swap didn't return the old value.")
+	require.Equal(t, int32(1), atom.Load(), "Swap didn't set the correct value.")
 
 	atom.Store(42)
-	require.Equal(t, uint32(42), atom.Load(), "Store didn't set the correct value.")
+	require.Equal(t, int32(42), atom.Load(), "Store didn't set the correct value.")
 
 	t.Run("JSON/Marshal", func(t *testing.T) {
 		bytes, err := json.Marshal(atom)
@@ -36,7 +36,7 @@ func TestUint32(t *testing.T) {
 	t.Run("JSON/Unmarshal", func(t *testing.T) {
 		err := json.Unmarshal([]byte("40"), &atom)
 		require.NoError(t, err, "json.Unmarshal errored unexpectedly.")
-		require.Equal(t, uint32(40), atom.Load(), "json.Unmarshal didn't set the correct value.")
+		require.Equal(t, int32(40), atom.Load(), "json.Unmarshal didn't set the correct value.")
 	})
 
 	t.Run("JSON/Unmarshal/Error", func(t *testing.T) {
@@ -48,14 +48,14 @@ func TestUint32(t *testing.T) {
 
 	t.Run("String", func(t *testing.T) {
 		t.Run("positive", func(t *testing.T) {
-			atom := NewUint32(math.MaxUint32)
-			assert.Equal(t, "4294967295", atom.String(),
+			atom := NewInt32(math.MaxInt32)
+			assert.Equal(t, "2147483647", atom.String(),
 				"String() returned an unexpected value.")
 		})
 
 		t.Run("negative", func(t *testing.T) {
-			atom := NewUint32(0)
-			assert.Equal(t, "0", atom.String(),
+			atom := NewInt32(math.MinInt32)
+			assert.Equal(t, "-2147483648", atom.String(),
 				"String() returned an unexpected value.")
 		})
 	})

@@ -6,66 +6,66 @@ import (
 	"sync/atomic"
 )
 
-// Uint32 is an atomic wrapper around uint32.
-type Uint32 struct {
+// Int32 is an atomic wrapper around int32.
+type Int32 struct {
 	_ nocmp // disallow non-atomic comparison
 
-	v uint32
+	v int32
 }
 
-// NewInt32 creates a new Uint32.
-func NewUint32(i uint32) *Uint32 {
-	return &Uint32{v: i}
+// NewInt32 creates a new Int32.
+func NewInt32(i int32) *Int32 {
+	return &Int32{v: i}
 }
 
 // Load atomically loads the wrapped value.
-func (i *Uint32) Load() uint32 {
-	return atomic.LoadUint32(&i.v)
+func (i *Int32) Load() int32 {
+	return atomic.LoadInt32(&i.v)
 }
 
-// Add atomically adds to the wrapped uint32 and returns the new value.
-func (i *Uint32) Add(n uint32) uint32 {
-	return atomic.AddUint32(&i.v, n)
+// Add atomically adds to the wrapped int32 and returns the new value.
+func (i *Int32) Add(n int32) int32 {
+	return atomic.AddInt32(&i.v, n)
 }
 
-// Sub atomically subtracts from the wrapped uint32 and returns the new value.
-func (i *Uint32) Sub(n uint32) uint32 {
-	return atomic.AddUint32(&i.v, -n)
+// Sub atomically subtracts from the wrapped int32 and returns the new value.
+func (i *Int32) Sub(n int32) int32 {
+	return atomic.AddInt32(&i.v, -n)
 }
 
-// Inc atomically increments the wrapped uint32 and returns the new value.
-func (i *Uint32) Inc() uint32 {
+// Inc atomically increments the wrapped int32 and returns the new value.
+func (i *Int32) Inc() int32 {
 	return i.Add(1)
 }
 
-// Dec atomically decrements the wrapped uint32 and returns the new value.
-func (i *Uint32) Dec() uint32 {
+// Dec atomically decrements the wrapped int32 and returns the new value.
+func (i *Int32) Dec() int32 {
 	return i.Sub(1)
 }
 
 // CAS is an atomic compare-and-swap.
-func (i *Uint32) CAS(old, new uint32) bool {
-	return atomic.CompareAndSwapUint32(&i.v, old, new)
+func (i *Int32) CAS(old, new int32) bool {
+	return atomic.CompareAndSwapInt32(&i.v, old, new)
 }
 
 // Store atomically stores the passed value.
-func (i *Uint32) Store(n uint32) {
-	atomic.StoreUint32(&i.v, n)
+func (i *Int32) Store(n int32) {
+	atomic.StoreInt32(&i.v, n)
 }
 
-// Swap atomically swaps the wrapped uint32 and returns the old value.
-func (i *Uint32) Swap(n uint32) uint32 {
-	return atomic.SwapUint32(&i.v, n)
+// Swap atomically swaps the wrapped int32 and returns the old value.
+func (i *Int32) Swap(n int32) int32 {
+	return atomic.SwapInt32(&i.v, n)
 }
 
-// MarshalJSON encodes the wrapped uint32 into JSON.
-func (i *Uint32) MarshalJSON() ([]byte, error) {
+// MarshalJSON encodes the wrapped int32 into JSON.
+func (i *Int32) MarshalJSON() ([]byte, error) {
 	return json.Marshal(i.Load())
 }
 
-// UnmarshalJSON decodes JSON into the wrapped uint32.
-func (i *Uint32) UnmarshalJSON(b []byte) error {
-	var v uint32
+// UnmarshalJSON decodes JSON into the wrapped int32.
+func (i *Int32) UnmarshalJSON(b []byte) error {
+	var v int32
 	if err := json.Unmarshal(b, &v); err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (i *Uint32) UnmarshalJSON(b []byte) error {
 }
 
 // String encodes the wrapped value as a string.
-func (i *Uint32) String() string {
+func (i *Int32) String() string {
 	v := i.Load()
 	return strconv.FormatInt(int64(v), 10)
 }
