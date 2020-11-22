@@ -3,7 +3,7 @@ package resilience4go_ratelimiter
 import "sync"
 
 type State struct {
-	config            RateLimiterConfig
+	config            *RateLimiterConfig
 	activeCycle       int64
 	activePermissions int
 	nanosToWait       int64
@@ -21,7 +21,7 @@ func NewAtomicState(state *State) *AtomicState {
 }
 
 func (a *AtomicState) get() *State {
-	a.mtx.RUnlock()
+	a.mtx.RLock()
 	defer a.mtx.RUnlock()
 
 	return a.state

@@ -29,7 +29,7 @@ type RateLimiter interface {
 
 	GetName() string
 
-	GetRateLimiterConfig() RateLimiterConfig
+	GetRateLimiterConfig() *RateLimiterConfig
 
 	GetNumberOfWaitingThreads() int32
 
@@ -41,14 +41,6 @@ type RateLimiterRegistry interface {
 }
 
 func NewRateLimiterConfig(timeoutDuration time.Duration, limitRefreshPeriod time.Duration, limitForPeriod int, writableStackTraceEnabled bool) (*RateLimiterConfig, error) {
-	if timeoutDuration.Nanoseconds() == int64(0) {
-		return nil, errors.New("TimeoutDuration must not be null")
-	}
-
-	if limitRefreshPeriod.Nanoseconds() == int64(0) {
-		return nil, errors.New("LimitRefreshPeriod must not be null")
-	}
-
 	if limitRefreshPeriod < 1*time.Nanosecond {
 		return nil, errors.New("LimitRefreshPeriod is too short")
 	}
@@ -84,7 +76,7 @@ type AtomicRateLimiter struct {
 	state          *AtomicState
 }
 
-func NewAtomicRateLimiter(name string, rateLimiterConfig RateLimiterConfig) RateLimiter {
+func NewAtomicRateLimiter(name string, rateLimiterConfig *RateLimiterConfig) RateLimiter {
 	state := NewAtomicState(&State{
 		config:            rateLimiterConfig,
 		activeCycle:       0,
@@ -180,7 +172,7 @@ func divCeil(x int, y int) int {
 	return (x + y - 1) / y
 }
 
-func (a *AtomicRateLimiter) reservePermissions(config RateLimiterConfig, permits int, timeoutInNanos int64, cycle int64, permissions int, nanosToWait int64) *State {
+func (a *AtomicRateLimiter) reservePermissions(config *RateLimiterConfig, permits int, timeoutInNanos int64, cycle int64, permissions int, nanosToWait int64) *State {
 	canAcquireInTime := timeoutInNanos >= nanosToWait
 	permissionsWithReservation := permissions
 	if canAcquireInTime {
@@ -230,7 +222,7 @@ func (a *AtomicRateLimiter) GetName() string {
 	return a.name
 }
 
-func (a *AtomicRateLimiter) GetRateLimiterConfig() RateLimiterConfig {
+func (a *AtomicRateLimiter) GetRateLimiterConfig() *RateLimiterConfig {
 	return a.state.get().config
 }
 
